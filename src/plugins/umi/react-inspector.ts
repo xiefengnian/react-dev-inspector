@@ -3,13 +3,13 @@
  */
 
 import type { IApi } from '@umijs/types'
-import {
-  createLaunchEditorMiddleware,
-} from '../webpack/middlewares'
+import { createLaunchEditorMiddleware } from '../webpack/middlewares'
 import type { InspectorPluginOptions } from '../babel'
 
 export default function inspectorPlugin(api: IApi) {
-  const inspectorConfig = api.userConfig.inspectorConfig as InspectorPluginOptions | undefined
+  const inspectorConfig = api.userConfig.inspectorConfig as
+    | InspectorPluginOptions
+    | undefined
 
   api.describe({
     key: 'inspectorConfig',
@@ -25,10 +25,7 @@ export default function inspectorPlugin(api: IApi) {
     'react-dev-inspector/plugins/babel',
     {
       cwd: inspectorConfig?.cwd,
-      excludes: [
-        /\.umi(-production)?\//,
-        ...inspectorConfig?.excludes ?? [],
-      ],
+      excludes: [/\.umi(-production)?\//, ...(inspectorConfig?.excludes ?? [])],
     },
   ]
 
@@ -41,7 +38,7 @@ export default function inspectorPlugin(api: IApi) {
   // @ts-ignore
   if (typeof api!.addExtraBabelPlugins === 'function') {
     // @ts-ignore
-    api!.addBeforeBabelPlugins(() => babelOpts)
+    api!.addBeforeBabelPlugins(() => [babelOpts])
   }
 
   /**
@@ -52,5 +49,6 @@ export default function inspectorPlugin(api: IApi) {
    * due to umi3 not use webpack devServer,
    * so need add launch editor middleware manually
    */
-  api.addBeforeMiddewares(createLaunchEditorMiddleware)
+  // @ts-ignore
+  api.addBeforeMiddlewares(createLaunchEditorMiddleware)
 }
